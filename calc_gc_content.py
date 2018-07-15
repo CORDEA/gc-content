@@ -26,13 +26,14 @@ class Nucleobase:
 
     def update(self, char):
         self.can_calculate = True
-        if char.lower() == 'a':
+        lower = char.lower()
+        if lower == 'a':
             self.__adenine += 1
-        elif char.lower() == 't':
+        elif lower == 't':
             self.__thymine += 1
-        elif char.lower() == 'g':
+        elif lower == 'g':
             self.__guanine += 1
-        elif char.lower() == 'c':
+        elif lower == 'c':
             self.__cytosine += 1
         else:
             self.__other += 1
