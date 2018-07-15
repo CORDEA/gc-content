@@ -19,29 +19,54 @@ __date__ = "2014-10-09"
 
 import sys
 
+
+class Nucleobase:
+    def __init__(self):
+        self.reset()
+
+    def update(self, char):
+        self.can_calculate = True
+        if char.lower() == 'a':
+            self.__adenine += 1
+        elif char.lower() == 't':
+            self.__thymine += 1
+        elif char.lower() == 'g':
+            self.__guanine += 1
+        elif char.lower() == 'c':
+            self.__cytosine += 1
+        else:
+            self.__other += 1
+
+    def reset(self):
+        self.__adenine = 0
+        self.__thymine = 0
+        self.__guanine = 0
+        self.__cytosine = 0
+        self.__other = 0
+        self.can_calculate = False
+
+    def calculate(self):
+        return (self.__guanine + self.__cytosine) / float(
+            self.__adenine + self.__thymine + self.__guanine + self.__cytosine)
+
+
 infile = open(sys.argv[1], "r")
 lines = infile.readlines()
 infile.close()
 
-atgc = ['A', 'T', 'G', 'C']
+base = Nucleobase()
 fflag = False
 lst = []
 
 for l in range(len(lines)):
     line = lines[l]
     if ">" in line:
-        if fflag:
-            sys.stdout.write(seq)
-            print("gc%: " + str((lst[2] + lst[3]) / float(sum(lst))))
-            lst = []
-        seq = line
-        fflag = True
+        if base.can_calculate:
+            print("gc%: " + str(base.calculate()))
+            base.reset()
+        sys.stdout.write(line)
     else:
-        for i in range(len(atgc)):
-            try:
-                lst[i] += line.count(atgc[i])
-            except:
-                lst.append(line.count(atgc[i]))
+        for char in line:
+            base.update(char)
 
-sys.stdout.write(seq)
-print("gc%: " + str((lst[2] + lst[3]) / float(sum(lst))))
+print("gc%: " + str(base.calculate()))
