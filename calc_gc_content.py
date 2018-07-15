@@ -14,22 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__Author__ =  "Yoshihiro Tanaka <contact@cordea.jp>"
-__date__   =  "2014-10-09"
+__Author__ = "Yoshihiro Tanaka <contact@cordea.jp>"
+__date__ = "2014-10-09"
 
 import sys
+
 infile = open(sys.argv[1], "r")
 lines = infile.readlines()
 infile.close()
+
 atgc = ['A', 'T', 'G', 'C']
 fflag = False
 lst = []
+
 for l in range(len(lines)):
     line = lines[l]
     if ">" in line:
         if fflag:
             sys.stdout.write(seq)
-            print("gc%: " + str( (lst[2]+lst[3]) / float(sum(lst)) ))
+            print("gc%: " + str((lst[2] + lst[3]) / float(sum(lst))))
             lst = []
         seq = line
         fflag = True
@@ -39,5 +42,6 @@ for l in range(len(lines)):
                 lst[i] += line.count(atgc[i])
             except:
                 lst.append(line.count(atgc[i]))
+
 sys.stdout.write(seq)
-print("gc%: " + str( (lst[2]+lst[3]) / float(sum(lst)) ))
+print("gc%: " + str((lst[2] + lst[3]) / float(sum(lst))))
