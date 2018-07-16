@@ -18,35 +18,39 @@
 # Author: Yoshihiro Tanaka <contact@cordea.jp>
 # date: 2014-10-26
 
-function calc_gc(atgc) {
-    sum = 0;
-    for (i in atgc) {
-        sum += atgc[i]
+function calc_gc_content(arr) {
+    sum = 0
+    for (i in arr) {
+        sum += arr[i]
     }
-    gc = ((atgc["G"] + atgc["C"]) / sum)*100
+    gc = ((arr["G"] + arr["C"]) / sum) * 100
     return gc
 }
-function plus_atgc(atgc) {
-    if (substr($0, i, 1) in atgc) {
-        return substr($0, i, 1)
+function print_gc_content(gc_content) {
+    printf("%s%0.2f\n", "gc%: ", gc_content)
+}
+function update_arr(arr) {
+    char = substr($0, i, 1)
+    if (char in arr) {
+        ++arr[char]
     }
 }
 {
     if ($0~/^>/) {
-        if (length(atgc) > 0) {
-            printf("%s%0.2f\n","gc%: ",calc_gc(atgc))
+        if (length(arr) > 0) {
+            print_gc_content(calc_gc_content(arr))
         }
         print $0
         for (i=1; i<=4; ++i) {
-            atgc[substr("ATGC", i, 1)] = 0
+            arr[substr("ATGC", i, 1)] = 0
         }
     }
     else {
         for (i=1; i<=length($0); ++i) {
-            ++atgc[plus_atgc(atgc)]
+            update_arr(arr)
         }
     }
 }
 END {
-    printf("%s%0.2f\n","gc%: ",calc_gc(atgc))
+    print_gc_content(calc_gc_content(arr))
 }
